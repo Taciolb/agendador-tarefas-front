@@ -1,19 +1,10 @@
-<div class="register-component">
+<div class="login-component">
     <mat-card>
         <mat-card-header class="padding-m">
-            <mat-card-title>Cadastro de Usuário</mat-card-title>
+            <mat-card-title>Login de Usuário</mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <form [formGroup]="form">
-
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>Nome Completo</mat-label>
-                    <input matInput formControlName="nome" placeholder="Digite o seu nome completo">
-                    @if (fullNameErros) {
-                    <mat-error>{{fullNameErros}}</mat-error>
-                    }
-                </mat-form-field>
-
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Email</mat-label>
                     <input matInput formControlName="email" placeholder="Digite o seu e-mail">
@@ -22,13 +13,13 @@
                     }
                 </mat-form-field>
 
-                <imput-password-field [placeholder]="'Cadastre a sua Senha'" [control]="passwordControl"></imput-password-field>
+                <imput-password-field [control]="passwordControl"></imput-password-field>
             </form>
         </mat-card-content>
         <mat-card-actions>
             <button mat-raised-button class="full-width" [disabled]="form.invalid || isloading" (click)="submit()">
                 <span class="cad-button-content">
-                    {{ isloading ? "Cadastrando..." : "Cadastrar"}}
+                    {{ isloading ? "Entrando..." : "Entrar"}}
                     @if(isloading) {<mat-spinner diameter="20"></mat-spinner>}
                 </span>
             </button>
