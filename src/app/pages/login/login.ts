@@ -10,7 +10,7 @@ import { User, UserLoginPayload } from '../../services/user';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
-import { Authservice } from '../../services/authservice';
+import { AuthService } from '../../services/authservice';
 
 @Component({
   selector: 'app-login',
@@ -37,13 +37,19 @@ export class Login {
     private formBuilder: FormBuilder,
     private user: User,
     private router: Router,
-    private authService: Authservice
+    private authService: AuthService
 
   ) {
     this.form = this.formBuilder.group({
       email: this.formBuilder.control ('', {validators: [Validators.required, Validators.email], nonNullable: true}),
       senha: this.formBuilder.control ('', {validators: [Validators.required, Validators.minLength(6)],nonNullable: true})
     });
+  }
+
+  ngOnInit(): void {
+    if(this.authService.isLoggedIn()) {
+      this.router.navigate(['/tasks'])
+    }
   }
 
   get passwordControl(): FormControl {
@@ -73,7 +79,7 @@ export class Login {
     .subscribe({
       next: (response) => {
         this.authService.saveToken(response)
-        this.router.navigate(['/'])
+        this.router.navigate(['/tasks'])
       },
       error: (error) => {
         console.error(`Erro ao entrar`, error)    

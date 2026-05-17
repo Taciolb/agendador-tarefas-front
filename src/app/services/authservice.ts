@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class Authservice {
+export class AuthService {
 
  private readonly TOKEN_KEY = 'auth_token'
 
@@ -13,5 +13,9 @@ export class Authservice {
 
  getToken(): string | null {
   return localStorage.getItem(this.TOKEN_KEY)
+ }
+
+ isLoggedIn(): boolean {
+  return !!this.getToken();
  }
 }

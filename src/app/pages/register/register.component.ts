@@ -10,6 +10,7 @@ import { User } from '../../services/user';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
+import { AuthService } from '../../services/authservice';
 
 
 @Component({
@@ -35,6 +36,7 @@ export class RegisterComponent {
   constructor(
     private formBuilder: FormBuilder, 
     private user: User,
+    private authService: AuthService,
     private router: Router
   
   ) {
@@ -43,6 +45,12 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  ngOnInit(): void {
+    if(this.authService.isLoggedIn()) {
+      this.router.navigate(['/tasks'])
+    }
   }
 
   get passwordControl(): FormControl {
