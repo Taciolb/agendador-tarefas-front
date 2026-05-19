@@ -10,7 +10,7 @@ import { User, UserLoginPayload } from '../../services/user';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
-import { Authservice } from '../../services/authservice';
+import { AuthService } from '../../services/authservice';
 
 @Component({
   selector: 'app-login',
@@ -30,20 +30,26 @@ import { Authservice } from '../../services/authservice';
 })
 export class Login {
 
-  form: FormGroup<{email:FormControl<string>, senha: FormControl<string>}>;
+  form: FormGroup<{ email: FormControl<string>, senha: FormControl<string> }>;
   isloading = false
 
   constructor(
     private formBuilder: FormBuilder,
     private user: User,
     private router: Router,
-    private authService: Authservice
+    private authService: AuthService
 
   ) {
     this.form = this.formBuilder.group({
-      email: this.formBuilder.control ('', {validators: [Validators.required, Validators.email], nonNullable: true}),
-      senha: this.formBuilder.control ('', {validators: [Validators.required, Validators.minLength(6)],nonNullable: true})
+      email: this.formBuilder.control('', { validators: [Validators.required, Validators.email], nonNullable: true }),
+      senha: this.formBuilder.control('', { validators: [Validators.required, Validators.minLength(6)], nonNullable: true })
     });
+  }
+
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/tasks'])
+    }
   }
 
   get passwordControl(): FormControl {
@@ -69,16 +75,23 @@ export class Login {
     this.isloading = true;
 
     this.user.login(formData)
-    .pipe(finalize(() => this.isloading = false))
-    .subscribe({
-      next: (response) => {
-        this.authService.saveToken(response)
-        this.router.navigate(['/'])
-      },
-      error: (error) => {
-        console.error(`Erro ao entrar`, error)    
-      }
-    })
+      .pipe(finalize(() => this.isloading = false))
+      .subscribe({
+        next: (response) => {
+          this.authService.saveToken(response)
+          this.user.getUserByEmail(response).subscribe(
+            {
+              next: (user) => {
+                this.authService.saveUser(user)
+              }
+            }
+          )
+          this.router.navigate(['/tasks'])
+        },
+        error: (error) => {
+          console.error(`Erro ao entrar`, error)
+        }
+      })
   }
 
 }

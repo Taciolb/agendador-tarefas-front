@@ -1,9 +1,11 @@
 <mat-toolbar class="app-top-menu-toolbar">
     <span class="logo">
         <a routerLink="/">
-            <img [src]="appLogo" alt="Logo" class="logo-img"/>
+            <img [src]="appLogo" alt="Logo" class="logo-img" />
         </a>
     </span>
+
+    @if (!estaLogado) {
 
     <span class="spacer"></span>
 
@@ -14,5 +16,15 @@
 
     <button matButton [disabled]="estaNaRotaLogin()" routerLink="/login">Entrar</button>
     <button matButton="filled" [disabled]="estaNaRotaRegister()" routerLink="/register">Cadastrar-se</button>
+
+    }
+
+    @if (estaLogado) {
+   <div class="avatar-usuario" [matMenuTriggerFor]="menu">{{pegarInicialUsuario()}}</div>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item>Meus dados</button>
+        <button mat-menu-item (click)="logout()">Sair</button>
+    </mat-menu>
+    }
 
 </mat-toolbar>
